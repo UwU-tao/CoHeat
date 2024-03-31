@@ -298,4 +298,5 @@ class CoHeat(nn.Module):
         aff_bundles_feature_ = aff_bundles_feature * (1 - bundles_gamma.unsqueeze(1))
         hist_bundles_feature_ = hist_bundles_feature * bundles_gamma.unsqueeze(1)
         scores = torch.mm(aff_users_feature, aff_bundles_feature_.t()) + torch.mm(hist_users_feature, hist_bundles_feature_.t())
+        
         return scores
