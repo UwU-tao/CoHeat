@@ -14,14 +14,14 @@ from utils import Datasets
 
 @click.command()
 @click.option('--seed', type=int, default=0)
-@click.option('--data_path', type=str, default='../data/warm')
+# @click.option('--data_path', type=str, default='../data/warm')
 @click.option('--data', type=str, default='Youshu')
-def main(seed, data_path, data):
+def main(seed, data):
     set_seed(seed)
     conf = yaml.safe_load(open("config.yaml"))[data]
     conf['dataset'] = data
     dataset = Datasets(conf)
-    conf['data_path'] = data_path
+    # conf['data_path'] = data_path
     conf['num_users'] = dataset.num_users
     conf['num_bundles'] = dataset.num_bundles
     conf['num_items'] = dataset.num_items
