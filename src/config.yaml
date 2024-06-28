@@ -65,3 +65,31 @@ iFashion:
 
   epochs: 100
   test_interval: 5
+
+Steam:
+  data_path: '../data/cold'
+  batch_size_train: 2048
+  batch_size_test: 2048
+  topk: [10, 20, 40, 80]
+  topk_valid: 20
+
+
+  embedding_size: 64
+  num_layers: 1
+
+  aff_ed_ratio: 0.2
+  hist_ed_ratio: 0.2
+  agg_ed_ratio: 0.2
+
+  residual_coff: 0.4
+
+  lr: 1.0e-3
+  lambda2: 1.0e-4
+  lambda1: 0.1
+
+  max_temp: 10000
+
+  epochs: 100
+  test_interval: 5
+
+  aug_type: 'MD'
