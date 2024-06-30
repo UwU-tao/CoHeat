@@ -32,7 +32,7 @@ def main(seed, data):
 
     model = CoHeat(conf, dataset.graphs, dataset.bundles_freq).to(device)
     optimizer = optim.Adam(model.parameters(), lr=conf["lr"], weight_decay=conf["lambda2"])
-    crit = 20
+    crit = 1
     best_vld_rec, best_vld_ndcg, best_content = 0., 0., ''
 
     for epoch in range(1, conf["epochs"]+1):
