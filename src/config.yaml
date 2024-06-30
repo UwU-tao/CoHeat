@@ -67,7 +67,7 @@ iFashion:
   test_interval: 5
 
 Steam:
-  data_path: '../data/cold'
+  data_path: '../data/warm'
   batch_size_train: 2048
   batch_size_test: 2048
   topk: [1, 3, 5, 10]
