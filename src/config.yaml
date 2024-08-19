@@ -177,3 +177,30 @@ food:
   test_interval: 5
 
   aug_type: 'MD'
+
+ML1Mcate:
+  data_path: '../data/cold'
+  batch_size_train: 64
+  batch_size_test: 64
+  topk: [10, 30, 50, 80]
+  topk_valid: 30
+
+  embedding_size: 64
+  num_layers: 1
+
+  aff_ed_ratio: 0.2
+  hist_ed_ratio: 0.2
+  agg_ed_ratio: 0.2
+
+  residual_coff: 0.2
+
+  lr: 1.0e-2
+  lambda2: 1.0e-4
+  lambda1: 0.2
+
+  max_temp: 10000
+
+  epochs: 100
+  test_interval: 5
+
+  aug_type: 'MD'
