@@ -96,7 +96,7 @@ class CoHeat(nn.Module):
         nn.init.xavier_normal_(self.IL_layer.weight)
         self.BL_layer = nn.Linear(self.embedding_size, self.embedding_size, bias=False)
         nn.init.xavier_normal_(self.BL_layer.weight)
-        self.cate_feats = torch.tensor(np.load("genre_feats.npy")).to(self.device)
+        self.cate_feats = torch.tensor(np.load("../genre_feats.npy")).to(self.device)
 
     def get_aff_graph(self):
         """

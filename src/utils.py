@@ -139,7 +139,7 @@ class Datasets():
             (values, (indices[:, 0], indices[:, 1])), shape=(self.num_users, self.num_items)).tocsr()
         
         i_c_graph = sp.coo_matrix(
-            (values, (indices[:, 1], indices[:, 2])), shape=(self.num_items, 19)
+            (values, (indices[:, 1], indices[:, 2])), shape=(self.num_items, 18)
         )
         
         print_statistics(u_i_graph, 'U-I statistics')
