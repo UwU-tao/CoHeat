@@ -86,7 +86,7 @@ class Datasets():
         self.num_users, self.num_bundles, self.num_items = self.get_data_size()
 
         b_i_graph = self.get_bi()
-        u_i_pairs, u_i_graph = self.get_ui()
+        u_i_pairs, u_i_graph, i_c_graph = self.get_ui()
 
         u_b_pairs_train, u_b_graph_train = self.get_ub("train")
         u_b_pairs_val, u_b_graph_val = self.get_ub("tune")
@@ -96,7 +96,7 @@ class Datasets():
         self.bundle_val_data = TestDataset(u_b_pairs_val, u_b_graph_val, u_b_graph_train, self.num_users, self.num_bundles)
         self.bundle_test_data = TestDataset(u_b_pairs_test, u_b_graph_test, u_b_graph_train, self.num_users, self.num_bundles)
 
-        self.graphs = [u_b_graph_train, u_i_graph, b_i_graph]
+        self.graphs = [u_b_graph_train, u_i_graph, b_i_graph, i_c_graph]
 
         self.train_loader = DataLoader(self.bundle_train_data, batch_size=batch_size_train, shuffle=True, num_workers=4, drop_last=True)
         self.val_loader = DataLoader(self.bundle_val_data, batch_size=batch_size_test, shuffle=False, num_workers=4)
@@ -137,8 +137,13 @@ class Datasets():
         values = np.ones(len(u_i_pairs), dtype=np.float32)
         u_i_graph = sp.coo_matrix( 
             (values, (indices[:, 0], indices[:, 1])), shape=(self.num_users, self.num_items)).tocsr()
+        
+        i_c_graph = sp.coo_matrix(
+            (values, (indice[:, 1], indice[:, 2])), shape=(self.num_items, 19)
+        )
+        
         print_statistics(u_i_graph, 'U-I statistics')
-        return u_i_pairs, u_i_graph
+        return u_i_pairs, u_i_graph, i_c_graph
 
     def get_ub(self, task):
         """

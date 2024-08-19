@@ -65,7 +65,7 @@ class CoHeat(nn.Module):
         self.init_emb()
 
         assert isinstance(raw_graph, list)
-        self.ub_graph, self.ui_graph, self.bi_graph = raw_graph
+        self.ub_graph, self.ui_graph, self.bi_graph, self.ic_graph = raw_graph
 
         self.get_aff_graph_ori()
         self.get_hist_graph_ori()
@@ -78,6 +78,9 @@ class CoHeat(nn.Module):
         self.num_layers = self.conf["num_layers"]
 
         self.bundles_freq = torch.FloatTensor(bundles_freq).to(self.device)
+        self.lin = nn.Linear(384, self.embedding_size)
+        self.uc = to_tensor(laplace_transform(self.ui_graph @ self.ic_graph)).to(self.device)
+        self.bc = to_tensor(laplace_transform(self.bi_graph @ self.ic_graph)).to(self.device)
 
     def init_emb(self):
         """
@@ -93,6 +96,7 @@ class CoHeat(nn.Module):
         nn.init.xavier_normal_(self.IL_layer.weight)
         self.BL_layer = nn.Linear(self.embedding_size, self.embedding_size, bias=False)
         nn.init.xavier_normal_(self.BL_layer.weight)
+        self.cate_feats = torch.tensor(np.load("genre_feats.npy")).to(self.device)
 
     def get_aff_graph(self):
         """
@@ -206,6 +210,8 @@ class CoHeat(nn.Module):
         """
         Propagate the representations
         """
+        cate_feats = self.lin(self.cate_feats)
+        
         # Affiliation-view
         if test:
             aff_users_feature, aff_items_feature = self.one_propagate(self.aff_view_graph_ori, self.users_feature, self.items_feature)
@@ -220,6 +226,14 @@ class CoHeat(nn.Module):
         else:
             hist_users_feature, hist_bundles_feature = self.one_propagate(self.hist_view_graph, self.users_feature, self.bundles_feature)
 
+        u_cates = self.uc @ cate_feats
+        b_cates = self.bc @ cate_feats
+        aff_bundles_feature = torch.cat((aff_bundles_feature, b_cates), 1)
+        hist_bundles_feature = torch.cat((hist_bundles_feature, b_cates), 1)
+        
+        aff_users_feature = torch.cat((aff_users_feature, u_cates), 1)
+        hist_users_feature = torch.cat((hist_users_feature, u_cates), 1)
+        
         users_feature = [aff_users_feature, hist_users_feature]
         bundles_feature = [aff_bundles_feature, hist_bundles_feature]
 
